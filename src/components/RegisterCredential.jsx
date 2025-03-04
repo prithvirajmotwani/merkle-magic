@@ -45,7 +45,6 @@ const RegisterCredential = () => {
   const [isRegistering, setIsRegistering] = useState(false);
   const [qrVersion, setQrVersion] = useState(4);
   const [errorCorrectionLevel, setErrorCorrectionLevel] = useState("M");
-  const [degreeType, setDegreeType] = useState("bachelor");
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTreeConstructed, setIsTreeConstructed] = useState(false);
   const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
@@ -174,20 +173,9 @@ const RegisterCredential = () => {
                       </Box>
                       <Divider sx={{ mb: 3 }} />
 
-                      <FormControl fullWidth margin="normal">
-                        <InputLabel>Degree Type</InputLabel>
-                        <Select
-                          value={degreeType}
-                          label="Degree Type"
-                          onChange={(e) => setDegreeType(e.target.value)}
-                        >
-                          <MenuItem value="bachelor">Bachelor's Degree</MenuItem>
-                          <MenuItem value="master">Master's Degree</MenuItem>
-                          <MenuItem value="doctorate">Doctorate</MenuItem>
-                          <MenuItem value="certificate">Certificate</MenuItem>
-                          <MenuItem value="transcript">Transcript</MenuItem>
-                        </Select>
-                      </FormControl>
+                      <Typography variant="subtitle2" color="#666" gutterBottom sx={{ mb: 2 }}>
+                        Configure QR code specifications for degree and transcript credentials
+                      </Typography>
 
                       <FormControl fullWidth margin="normal">
                         <InputLabel>QR Version</InputLabel>
@@ -297,18 +285,6 @@ const RegisterCredential = () => {
                         </Typography>
                       </Box>
                       <Divider sx={{ mb: 3 }} />
-
-                      <Box sx={{ mb: 2 }}>
-                        <Typography variant="subtitle2" color="#666" gutterBottom>
-                          Degree Type
-                        </Typography>
-                        <Chip
-                          label={degreeType.charAt(0).toUpperCase() + degreeType.slice(1)}
-                          color="primary"
-                          variant="outlined"
-                          sx={{ fontWeight: 500 }}
-                        />
-                      </Box>
 
                       <Box sx={{ mb: 2 }}>
                         <Typography variant="subtitle2" color="#666" gutterBottom>
