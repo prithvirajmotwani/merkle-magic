@@ -25,6 +25,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import { usePopup } from "../context/PopupContext";
 import { useAuth } from "../context/AuthContext";
@@ -36,6 +38,8 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import DownloadIcon from '@mui/icons-material/Download';
+import SchoolIcon from '@mui/icons-material/School';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const RegisterCredential = () => {
   const [activeStep, setActiveStep] = useState(0);
@@ -43,11 +47,19 @@ const RegisterCredential = () => {
   const [merkleTreeHeight, setMerkleTreeHeight] = useState("");
   const [numberOfCredentials, setNumberOfCredentials] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
-  const [qrVersion, setQrVersion] = useState(4);
-  const [errorCorrectionLevel, setErrorCorrectionLevel] = useState("M");
+  
+  // Degree QR configuration
+  const [degreeQrVersion, setDegreeQrVersion] = useState(4);
+  const [degreeErrorCorrectionLevel, setDegreeErrorCorrectionLevel] = useState("M");
+  
+  // Transcript QR configuration
+  const [transcriptQrVersion, setTranscriptQrVersion] = useState(4);
+  const [transcriptErrorCorrectionLevel, setTranscriptErrorCorrectionLevel] = useState("M");
+  
   const [selectedFile, setSelectedFile] = useState(null);
   const [isTreeConstructed, setIsTreeConstructed] = useState(false);
   const [downloadDialogOpen, setDownloadDialogOpen] = useState(false);
+  const [configTab, setConfigTab] = useState(0);
 
   const { openPopup } = usePopup();
   const { isMultiSigWalletConnected } = useAuth();
@@ -56,6 +68,10 @@ const RegisterCredential = () => {
     if (event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
+  };
+
+  const handleTabChange = (event, newValue) => {
+    setConfigTab(newValue);
   };
 
   const constructMerkleTree = () => {
@@ -173,38 +189,105 @@ const RegisterCredential = () => {
                       </Box>
                       <Divider sx={{ mb: 3 }} />
 
-                      <Typography variant="subtitle2" color="#666" gutterBottom sx={{ mb: 2 }}>
-                        Configure QR code specifications for degree and transcript credentials
-                      </Typography>
+                      <Tabs 
+                        value={configTab} 
+                        onChange={handleTabChange} 
+                        variant="fullWidth"
+                        sx={{ mb: 3 }}
+                      >
+                        <Tab 
+                          icon={<SchoolIcon />} 
+                          label="Degree" 
+                          sx={{ 
+                            textTransform: 'none', 
+                            fontWeight: 600, 
+                            '&.Mui-selected': { color: '#007BFF' } 
+                          }} 
+                        />
+                        <Tab 
+                          icon={<DescriptionIcon />} 
+                          label="Transcript" 
+                          sx={{ 
+                            textTransform: 'none', 
+                            fontWeight: 600, 
+                            '&.Mui-selected': { color: '#007BFF' } 
+                          }} 
+                        />
+                      </Tabs>
 
-                      <FormControl fullWidth margin="normal">
-                        <InputLabel>QR Version</InputLabel>
-                        <Select
-                          value={qrVersion}
-                          label="QR Version"
-                          onChange={(e) => setQrVersion(e.target.value)}
-                        >
-                          {[1, 2, 3, 4, 5, 6].map((version) => (
-                            <MenuItem key={version} value={version}>
-                              Version {version}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      {configTab === 0 ? (
+                        // Degree QR Configuration
+                        <Box>
+                          <Typography variant="subtitle2" color="#666" gutterBottom sx={{ mb: 2 }}>
+                            Configure QR code specifications for degree credentials
+                          </Typography>
 
-                      <FormControl fullWidth margin="normal">
-                        <InputLabel>Error Correction Level</InputLabel>
-                        <Select
-                          value={errorCorrectionLevel}
-                          label="Error Correction Level"
-                          onChange={(e) => setErrorCorrectionLevel(e.target.value)}
-                        >
-                          <MenuItem value="L">Low (7%)</MenuItem>
-                          <MenuItem value="M">Medium (15%)</MenuItem>
-                          <MenuItem value="Q">Quartile (25%)</MenuItem>
-                          <MenuItem value="H">High (30%)</MenuItem>
-                        </Select>
-                      </FormControl>
+                          <FormControl fullWidth margin="normal">
+                            <InputLabel>QR Version</InputLabel>
+                            <Select
+                              value={degreeQrVersion}
+                              label="QR Version"
+                              onChange={(e) => setDegreeQrVersion(e.target.value)}
+                            >
+                              {[1, 2, 3, 4, 5, 6].map((version) => (
+                                <MenuItem key={version} value={version}>
+                                  Version {version}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <FormControl fullWidth margin="normal">
+                            <InputLabel>Error Correction Level</InputLabel>
+                            <Select
+                              value={degreeErrorCorrectionLevel}
+                              label="Error Correction Level"
+                              onChange={(e) => setDegreeErrorCorrectionLevel(e.target.value)}
+                            >
+                              <MenuItem value="L">Low (7%)</MenuItem>
+                              <MenuItem value="M">Medium (15%)</MenuItem>
+                              <MenuItem value="Q">Quartile (25%)</MenuItem>
+                              <MenuItem value="H">High (30%)</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                      ) : (
+                        // Transcript QR Configuration
+                        <Box>
+                          <Typography variant="subtitle2" color="#666" gutterBottom sx={{ mb: 2 }}>
+                            Configure QR code specifications for transcript credentials
+                          </Typography>
+
+                          <FormControl fullWidth margin="normal">
+                            <InputLabel>QR Version</InputLabel>
+                            <Select
+                              value={transcriptQrVersion}
+                              label="QR Version"
+                              onChange={(e) => setTranscriptQrVersion(e.target.value)}
+                            >
+                              {[1, 2, 3, 4, 5, 6].map((version) => (
+                                <MenuItem key={version} value={version}>
+                                  Version {version}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <FormControl fullWidth margin="normal">
+                            <InputLabel>Error Correction Level</InputLabel>
+                            <Select
+                              value={transcriptErrorCorrectionLevel}
+                              label="Error Correction Level"
+                              onChange={(e) => setTranscriptErrorCorrectionLevel(e.target.value)}
+                            >
+                              <MenuItem value="L">Low (7%)</MenuItem>
+                              <MenuItem value="M">Medium (15%)</MenuItem>
+                              <MenuItem value="Q">Quartile (25%)</MenuItem>
+                              <MenuItem value="H">High (30%)</MenuItem>
+                            </Select>
+                          </FormControl>
+                        </Box>
+                      )}
                     </CardContent>
                   </Card>
                 </Grid>
